@@ -1,0 +1,24 @@
+"""
+@author: Naveed Achkal
+
+"""
+
+Dataset:
+https://www.kaggle.com/martandsay/height-weight-data-visualization-using-python
+
+Description:
+Data contains 3 columns as
+1.Gender
+2.Height
+3.Weight
+
+ 	Gender 	Height 	Weight
+0 	Male 	73.847017 	241.893563
+1 	Male 	68.781904 	162.310473
+2 	Male 	74.110105 	212.740856
+3 	Male 	71.730978 	220.042470
+4 	Male 	69.881796 	206.349801
+
+What To Do:
+Predict Weight when Gender & Height are given
+
