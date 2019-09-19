@@ -35,4 +35,23 @@ print(y_train)
 print(X_test)
 print(y_test)
 
+#Fitting Model
+from sklearn.linear_model import LinearRegression
+lin_reg=LinearRegression()
+lin_reg.fit(X_train,y_train)
+
+#Making Prediction
+lin_prod=lin_reg.predict(X_test)
+
+#Model Accuracy
+from sklearn import metrics
+print("R square= ", metrics.r2_score(y_test,lin_prod))
+print("MSE= ", metrics.mean_squared_error(y_test,lin_prod))
+
+#Predict Weight
+my_pred_weight=lin_reg.predict([[0,58]])
+print("My predicted weight=", my_pred_weight)
+
+
+
 
