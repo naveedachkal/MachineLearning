@@ -18,8 +18,46 @@ print(df.isnull().sum())
 #Dividing the data
 X=df.iloc[:, :-1]
 y=df.iloc[:, 2]
+Height=df.iloc[:,1]
+Weight=df.iloc[:,2]
 print(X)
 print(y)
+
+#Checking co-relation between Height & Weight
+import seaborn as sns
+import matplotlib.pyplot as plt
+sns.scatterplot(df.iloc[:,1],df.iloc[:,2])
+plt.show()
+
+#Checking for Outliers
+sns.boxplot(df.iloc[:,1])
+plt.show()
+sns.boxplot(df.iloc[:,2])
+plt.show()
+
+#Removing Outliers
+Ht_q1=df.iloc[:,1].quantile(0.25)
+Ht_q3=df.iloc[:,1].quantile(0.75)
+Ht_iqr=Ht_q3-Ht_q1
+Ht_ul=Ht_q3+1.5*Ht_iqr
+Ht_ll=Ht_q1-1.5*Ht_iqr
+X=X[(X.iloc[:,1]>=Ht_ll) & (X.iloc[:,1]<=Ht_ul)]
+
+Wt_q1=df.iloc[:,2].quantile(0.25)
+Wt_q3=df.iloc[:,2].quantile(0.75)
+Wt_iqr=Wt_q3-Wt_q1
+Wt_ul=Wt_q3+1.5*Wt_iqr
+Wt_ll=Wt_q1-1.5*Wt_iqr
+y=y[(y>=Wt_ll) & (y<=Wt_ul)]
+
+#Checking for Outliers
+sns.boxplot(X.iloc[:,1])
+plt.show()
+sns.boxplot(y)
+plt.show()
+
+#Reshaping to get equal elements
+y = y[:9992]
 
 #Converting Gender to Number
 from sklearn.preprocessing import LabelEncoder
