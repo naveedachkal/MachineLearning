@@ -43,8 +43,18 @@ plt.show()
 from pandas.plotting import scatter_matrix
 p3=scatter_matrix(df,figsize = (20,20))
 plt.show()
+
+#Pearson's Correlation Coefficient
 import seaborn as sns
 p4=sns.pairplot(df1)
+plt.show()
+
+#Heatmap(two-dimensional representation of information with the help of colors) to understand better
+plt.figure(figsize=(12,10))
+p6=sns.heatmap(df.corr(), annot=True, cmap='RdYlGn')
+plt.show()
+plt.figure(figsize=(12,10))
+p6=sns.heatmap(df1.corr(), annot=True, cmap='RdYlGn')
 plt.show()
 
 
