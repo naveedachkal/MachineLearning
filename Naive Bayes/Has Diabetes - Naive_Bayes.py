@@ -54,7 +54,18 @@ plt.figure(figsize=(12,10))
 p6=sns.heatmap(df.corr(), annot=True, cmap='RdYlGn')
 plt.show()
 plt.figure(figsize=(12,10))
-p6=sns.heatmap(df1.corr(), annot=True, cmap='RdYlGn')
+p7=sns.heatmap(df1.corr(), annot=True, cmap='RdYlGn')
 plt.show()
+
+#Dat
+print(df1.head())
+
+#Data Standardisation - As data may have broad range of values so may affect specially while calculating Euclidean distance
+from sklearn.preprocessing import StandardScaler
+standardised_data=StandardScaler()
+X=pd.DataFrame(standardised_data.fit_transform(df1.drop(["Outcome"], axis=1),), columns=['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
+       'BMI', 'DiabetesPedigreeFunction', 'Age'])
+print(X.head())
+
 
 
