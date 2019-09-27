@@ -66,6 +66,47 @@ standardised_data=StandardScaler()
 X=pd.DataFrame(standardised_data.fit_transform(df1.drop(["Outcome"], axis=1),), columns=['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
        'BMI', 'DiabetesPedigreeFunction', 'Age'])
 print(X.head())
+y=df1.Outcome
+print(y)
 
+#Train-Test split using Stratify - if variable is a binary categorical variable with values 0 and 1 and there are 25% of zeros and 75% of ones
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test=train_test_split(X,y,test_size=1/3, random_state=3, stratify=y)
+
+#Fitting the Model
+from sklearn.neighbors import KNeighborsClassifier
+test_scores=[]
+train_scores=[]
+for i in range(1,15):
+       knn=KNeighborsClassifier(i)
+       knn.fit(X_train,y_train)
+       train_scores.append(knn.score(X_train,y_train))
+       test_scores.append(knn.score(X_test,y_test))
+
+#calculating score using test & train data
+max_train_score=max(train_scores)
+train_scores_index=[i for i, v in enumerate(train_scores) if v == max_train_score]
+print('Max train score {} % and k={}'.format(max_train_score*100,list(map(lambda x: x+1, train_scores_index))))
+
+max_test_score = max(test_scores)
+test_scores_index = [i for i, v in enumerate(test_scores) if v == max_test_score]
+print('Max test score {} % and k = {}'.format(max_test_score*100,list(map(lambda x: x+1, test_scores_index))))
+
+#Visualisation
+plt.figure(figsize=(12,5))
+p=sns.lineplot(range(1,15), train_scores, markers='*', label='Train Score')
+p=sns.lineplot(range(1,15), test_scores, markers='O', label='Train Score')
+
+#k=11
+knn=KNeighborsClassifier(11)
+knn.fit(X_train, y_train)
+knn.score(X_test, y_test)
+
+#Evaluation - Confusion Matrix
+from sklearn.metrics import confusion_matrix
+y_pred = knn.predict(X_test)
+confusion_matrix(y_test,y_pred)
+pd.crosstab(y_test, y_pred, rownames=['True'], colnames=['Predicted'], margins=True)
+plt.show()
 
 
