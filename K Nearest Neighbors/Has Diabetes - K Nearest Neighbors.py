@@ -15,7 +15,7 @@ print(df.describe().T)
 
 #No True Zero value; Hence we will replace 0 with NaN
 df1=df.copy(deep=True)
-df1.iloc[:, :-1]=df1.iloc[:, :-1].replace(0,np.NaN)
+df1[['Glucose','BloodPressure','SkinThickness','Insulin','BMI']] = df1[['Glucose','BloodPressure','SkinThickness','Insulin','BMI']].replace(0,np.NaN)
 print(df1.isnull().sum())
 
 #Histogram to understand distribution
@@ -23,7 +23,6 @@ p=df.hist(figsize = (20,20))
 plt.show()
 
 #imputing values as per their distribution
-df1['Pregnancies'].fillna(df1['Pregnancies'].mean(), inplace=True)
 df1['Glucose'].fillna(df1['Glucose'].mean(), inplace=True)
 df1['BloodPressure'].fillna(df1['BloodPressure'].mean(), inplace=True)
 df1['SkinThickness'].fillna(df1['SkinThickness'].median(), inplace=True)
@@ -39,9 +38,17 @@ import missingno as msno
 p2=msno.bar(df)
 plt.show()
 
+#Count of 'Outcome' by their value
+color_wheel = {1: "#0392cf",
+               2: "#7bc043"}
+colors = df["Outcome"].map(lambda x: color_wheel.get(x + 1))
+print(df.Outcome.value_counts())
+p=df.Outcome.value_counts().plot(kind="bar")
+plt.show()
+
 #Scatter Matrix/Co-relation matrix
 from pandas.plotting import scatter_matrix
-p3=scatter_matrix(df,figsize = (20,20))
+p3=scatter_matrix(df,figsize = (25,25))
 plt.show()
 
 #Pearson's Correlation Coefficient
@@ -50,10 +57,10 @@ p4=sns.pairplot(df1)
 plt.show()
 
 #Heatmap(two-dimensional representation of information with the help of colors) to understand better
-plt.figure(figsize=(12,10))
+plt.figure(figsize=(50,50))
 p6=sns.heatmap(df.corr(), annot=True, cmap='RdYlGn')
 plt.show()
-plt.figure(figsize=(12,10))
+plt.figure(figsize=(50,50))
 p7=sns.heatmap(df1.corr(), annot=True, cmap='RdYlGn')
 plt.show()
 
@@ -63,8 +70,7 @@ print(df1.head())
 #Data Standardisation - As data may have broad range of values so may affect specially while calculating Euclidean distance
 from sklearn.preprocessing import StandardScaler
 standardised_data=StandardScaler()
-X=pd.DataFrame(standardised_data.fit_transform(df1.drop(["Outcome"], axis=1),), columns=['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin',
-       'BMI', 'DiabetesPedigreeFunction', 'Age'])
+X=pd.DataFrame(standardised_data.fit_transform(df1.iloc[:, :-1]))
 print(X.head())
 y=df1.Outcome
 print(y)
@@ -93,20 +99,29 @@ test_scores_index = [i for i, v in enumerate(test_scores) if v == max_test_score
 print('Max test score {} % and k = {}'.format(max_test_score*100,list(map(lambda x: x+1, test_scores_index))))
 
 #Visualisation
-plt.figure(figsize=(12,5))
+plt.figure(figsize=(15,5))
 p=sns.lineplot(range(1,15), train_scores, markers='*', label='Train Score')
-p=sns.lineplot(range(1,15), test_scores, markers='O', label='Train Score')
+p=sns.lineplot(range(1,15), test_scores, markers='O', label='Test Score')
+plt.show()
 
 #k=11
 knn=KNeighborsClassifier(11)
 knn.fit(X_train, y_train)
-knn.score(X_test, y_test)
+print('Final Accuracy= %', knn.score(X_test, y_test))
 
 #Evaluation - Confusion Matrix
 from sklearn.metrics import confusion_matrix
 y_pred = knn.predict(X_test)
 confusion_matrix(y_test,y_pred)
 pd.crosstab(y_test, y_pred, rownames=['True'], colnames=['Predicted'], margins=True)
+
+y_pred = knn.predict(X_test)
+from sklearn import metrics
+cnf_matrix = metrics.confusion_matrix(y_test, y_pred)
+p = sns.heatmap(pd.DataFrame(cnf_matrix), annot=True, cmap="YlGnBu" ,fmt='g')
+plt.title('Confusion matrix', y=1.1)
+plt.ylabel('Actual label')
+plt.xlabel('Predicted label')
 plt.show()
 
 
